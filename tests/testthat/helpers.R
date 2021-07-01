@@ -1,0 +1,25 @@
+# helper functions used in the test suite
+
+
+#' call the most probably class/label from xgboost softprob
+#'
+#' @param x matrix with class labels in columns
+call_softmax <- function(x) {
+  label_index <- apply(x, 1, which.max)
+  if (is.null(colnames(x))) {
+    return(as.integer(label_index))
+  }
+  colnames(x)[label_index]
+}
+
+
+#' compute root-mean-square-error
+#'
+#' @param x numeric vector
+#' @param y numeric vector
+#'
+#' @return root mean square error
+rmse <- function(x, y) {
+  sqrt(sum((x-y)**2)/length(y))
+}
+

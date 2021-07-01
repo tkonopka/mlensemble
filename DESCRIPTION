@@ -1,0 +1,25 @@
+Package: mlensemble
+Title: Ensembles of machine learning models
+Version: 0.0.1.0
+Authors@R: 
+    person("Tomasz", "Konopka", , "tokonopka@gmail.com", role = c("aut", "cre"))
+Author: Tomasz Konopka [aut, cre]
+Maintainer: Tomasz Konopka <tokonopka@gmail.com>
+Description: Ensembles of machine learning models
+Depends:
+    R (>= 3.6.0)
+Imports:
+    methods
+License: BSD_3_clause + file LICENSE
+URL: https://github.com/tkonopka/mlensemble
+BugReports: https://github.com/tkonopka/mlensemble/issues
+LazyData: true
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat,
+    data.table,
+    xgboost
+VignetteBuilder: knitr
+Encoding: UTF-8
+RoxygenNote: 7.1.1

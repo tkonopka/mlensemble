@@ -1,0 +1,13 @@
+## dev files
+*/*~
+.idea
+
+## cache files from vignettes
+vignettes/*.md
+vignettes/*html
+vignettes/*cache*
+vignettes/*files*
+*png
+
+## profiling
+*rprof

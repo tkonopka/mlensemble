@@ -1,14 +1,22 @@
+---
+output:
+  md_document:
+    variant: gfm
+---
+
 <!-- README.md is generated from README.Rmd. Do not edit manually -->
 
 # mlensemble
 
 Ensembles of machine learning models
 
+
 ## Installation
 
-The package can be installed through github.
+The package can be installed through github. 
 
-``` r
+```{r installation, eval=FALSE, echo=TRUE}
 library(devtools)
 install_github("tkonopka/mlenesemble")
 ```
+
