@@ -66,13 +66,19 @@ test_that("predict many values with ml_model, too many variables", {
 })
 
 
-
 test_that("predict many values with ml_ensemble", {
   m <- ml_model(m_lm_1) + ml_model(m_lm_2)
   testdata <- data.frame(x1=6:15, x2=6:15)
   # warning because ensemble is not calibrated
   expect_warning(result <- predict(m, newdata=testdata))
   expect_equal(length(result), nrow(testdata))
+})
+
+
+test_that("predict with an empty ml_ensemble should give an error", {
+  me <- ml_ensemble("my_ensemble")
+  testdata <- data.frame(x1=6:15, x2=6:15)
+  expect_error(predict(me, newdata=testdata))
 })
 
 

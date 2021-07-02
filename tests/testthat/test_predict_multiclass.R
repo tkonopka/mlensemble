@@ -175,3 +175,37 @@ test_that("predictions using models that use different features", {
   expect_lte(ee, max(ex, ey))
 })
 
+
+test_that("predictions with post-processing hooks", {
+  left_right <- function(x) {
+    cbind(left=x[, "Q4"]+x[, "Q3"], right=x[, "Q1"]+x[, "Q2"])
+  }
+  left_right_hook <- ml_hook(left_right, type="post")
+  quadrants <- paste0("Q", 1:4)
+  me0 <- ml_model(m_mc_x, label_names=quadrants) +
+    ml_model(m_mc_y, label_names=quadrants)
+  me1 <- ml_model(m_mc_x, label_names=quadrants, hooks=list(left_right_hook)) +
+    ml_model(m_mc_y, label_names=quadrants, hooks=list(left_right_hook))
+  # models within the ensemble should have hooks
+  expect_equal(length(me1$models[[1]]$hooks), 1)
+  calib_data <- copy(d_mc_3)
+  calib_data$LR <- ifelse(d_mc_3$label %in% c(0, 1), 1, 0)
+  # models have label names
+  # so calibration with integer labels should not work
+  expect_error(calibrate(me0, as.matrix(calib_data[, c("x", "y")]),
+                         calib_data$label))
+  # calibration with character-based labels should work
+  mec0 <- calibrate(me0, as.matrix(calib_data[, c("x", "y")]),
+                    quadrants[1+calib_data$label])
+  mec1 <- calibrate(me1, as.matrix(calib_data[, c("x", "y")]),
+                    c("left", "right")[1+calib_data$LR])
+  # models within the calibrated ensemble should preserve hooks
+  expect_equal(length(mec1$models[[1]]$hooks), 1)
+  test_data <- as.matrix(testdata_mc[, c("x", "y")])
+  test_labels <- testdata_mc$label
+  p0 <- predict(mec0, test_data)
+  p1 <- predict(mec1, test_data)
+  expect_equal(ncol(p0), 4)
+  expect_equal(ncol(p1), 2)
+})
+

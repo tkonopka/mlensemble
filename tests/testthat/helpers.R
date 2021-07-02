@@ -23,3 +23,14 @@ rmse <- function(x, y) {
   sqrt(sum((x-y)**2)/length(y))
 }
 
+
+#' row-normalize a matrix
+#' (can be used as a hook)
+#'
+#' @param x matrix
+#'
+#' @return matrix
+rowsum_norm <- function(x) {
+  x / apply(x, 1, sum)
+}
+

@@ -24,6 +24,13 @@ calibrate <- function(ensemble, data, label) {
     calibration_family <- binomial
   }
   label <- label_matrix(label, n>1)
+  # check that all labels can be calibrated
+  raw_labels <- unique(unlist(lapply(raw, colnames)))
+  missing_raw_label <- setdiff(colnames(label), raw_labels)
+  if (length(missing_raw_label)>0) {
+    missing <- paste(missing_raw_label, collapse=", ")
+    stop(paste0("calibration error - cannot calibrate labels: ", missing))
+  }
   # build models for each label
   # (one model for regression, many models for multi-class classification)
   result <- lapply(colnames(label), function(j) {
@@ -36,9 +43,11 @@ calibrate <- function(ensemble, data, label) {
 
 #' build one calibration model
 #'
+#' @keywords internal
+#' @noRd
 #' @param raw list of matrices with predictions
 #' @param label matrix with expected predictions
-#' @param j integer, column to consider
+#' @param j character, column in label to consider
 #' @param family description of error distribution
 #'
 #' @return glm model
@@ -61,6 +70,8 @@ calibrate_one <- function(raw, label, j, family) {
 
 #' standardize predictions into matrix form
 #'
+#' @keywords internal
+#' @noRd
 #' @param raw list of predictions as vectors or matrices
 #'
 #' @return list of predictions, always as matrices
@@ -76,6 +87,8 @@ standardize_raw <- function(raw) {
 
 #' standardize labels into matrix form
 #'
+#' @keywords internal
+#' @noRd
 #' @param label vector with values
 #' @param one_hot logical, determines if label matrix has one column
 #' with values, or a matrix using one-hot encoding

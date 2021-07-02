@@ -4,7 +4,8 @@
 #' define an ensemble of ml_model objects
 #'
 #' @export
-#' @param model_name character, a name
+#' @param name character, a unique name for the model
+#' @param hooks object of class ml_hooks, or a list of ml_hook objects
 #'
 #' @return object of class ml_ensemble
 #'
@@ -18,11 +19,17 @@
 #' lm_2 = lm(Y~x, data=data.frame(x=1:2, y=+0.2 + 1:2))
 #' ensemble = ml_model(lm_1) + ml_model(lm_2)
 #'
-ml_ensemble <- function(model_name=NULL) {
-  if (is.null(model_name)) {
+ml_ensemble <- function(name=NULL, hooks=list()) {
+  model_name <- name
+  if (is.null(name)) {
     model_name <- "ml-ensemble"
   }
-  result <- list(models=list(), model_name=model_name, calibration=NA)
+  result <- list(
+    models=list(),
+    model_name=model_name,
+    calibration=NA,
+    hooks=ml_hooks(hooks)
+  )
   class(result) <- c("ml_ensemble", "ml_model")
   result
 }
@@ -60,14 +67,11 @@ add_ml_model <- function(ensemble, model) {
 #'
 "+.ml_model" <- function(m1, m2) {
   is_ensemble1 <- is(m1, "ml_ensemble")
-  is_ensemble2 <- is(m2, "ml_emsemble")
-  if ((is_ensemble1 & is_ensemble2) | (!is_ensemble1 & !is_ensemble2)) {
-    # two model ensembles, or two single models
-    result <- add_ml_model(add_ml_model(ml_ensemble(), m1), m2)
-  } else if (is_ensemble1 & !is_ensemble2){
+  is_ensemble2 <- is(m2, "ml_ensemble")
+  if (is_ensemble1) {
     result <- add_ml_model(m1, m2)
-  } else if (!is_ensemble1 & is_ensemble2) {
-    result <- add_ml_model(m2, m1)
+  } else {
+    result <- add_ml_model(add_ml_model(ml_ensemble(), m1), m2)
   }
   result
 }

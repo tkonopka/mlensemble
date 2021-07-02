@@ -16,6 +16,7 @@ cut_to_features <- function(x, col_names) {
   result
 }
 
+
 #' prepare a data object so that it includes all required features
 #'
 #' @param newdata object with data to operate on, e.g. matrix or data.frame
@@ -50,8 +51,9 @@ prepare_newdata <- function(newdata, feature_names) {
 #'
 #' @return prediction of the model "object" on a dataset "data"
 predict.ml_model <- function(object, newdata, type="response", ...) {
+  result <- apply_hooks(object$hooks, newdata, type="pre")
   result <- predict(object$model,
-                    prepare_newdata(newdata, object$feature_names),
+                    prepare_newdata(result, object$feature_names),
                     type=type, ...)
   if (length(result) > nrow(newdata)) {
     result <- matrix(result, byrow=TRUE, nrow=nrow(newdata))
@@ -60,7 +62,7 @@ predict.ml_model <- function(object, newdata, type="response", ...) {
       colnames(result) <- paste0("label_", -1 + seq_len(ncol(result)))
     }
   }
-  result
+  apply_hooks(object$hooks, result, type="post")
 }
 
 
@@ -99,7 +101,8 @@ predict.ml_ensemble <- function(ensemble, newdata, type="response", ...) {
   }
 
   # produce predictions from the individual models
-  result <- raw_predict_ensemble(ensemble, newdata)
+  result <- apply_hooks(ensemble$hooks, newdata, type="pre")
+  result <- raw_predict_ensemble(ensemble, result)
 
   # compute reduction
   if (identical(ensemble$calibration, NA) & length(result)>1) {
@@ -116,6 +119,6 @@ predict.ml_ensemble <- function(ensemble, newdata, type="response", ...) {
   } else {
     names(result) <- rownames(newdata)
   }
-  result
+  apply_hooks(ensemble$hooks, result, type="post")
 }
 

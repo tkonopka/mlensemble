@@ -5,13 +5,14 @@
 #'
 #' @export
 #' @param model object with a machine learning model (e.g. lm, glm, xgboost)
-#' @param model_name character
+#' @param name character, a unique name for the model
 #' @param feature_names character, vector of feature names. If NULL,
 #'    feature names will be guessed from the model object
 #' @param label_names character, vector of labels for multi-class
 #' classification.
+#' @param hooks objects of class ml_hooks, or a list of ml_hook objects
 #'
-#' @return the same object with a new class 'ml_model'
+#' @return an object holding the model and book-keeping metadata
 #'
 #' @examples
 #'
@@ -23,9 +24,11 @@
 #' # use a custom name
 #' ml_model(lm_1, model_name="linear_model_1")
 #'
-ml_model <- function(model, model_name=NULL,
-                     feature_names=NULL, label_names=NULL) {
-  if (is.null(model_name)) {
+ml_model <- function(model, name=NULL,
+                     feature_names=NULL, label_names=NULL,
+                     hooks=list()) {
+  model_name <- name
+  if (is.null(name)) {
     model_name <- deparse(substitute(model))
   }
   if (is.null(feature_names)) {
@@ -35,7 +38,8 @@ ml_model <- function(model, model_name=NULL,
     model=model,
     model_name=model_name,
     feature_names=feature_names,
-    label_names=label_names
+    label_names=label_names,
+    hooks=ml_hooks(hooks)
   )
   class(result) <- "ml_model"
   result

@@ -4,21 +4,29 @@
 \alias{ml_model}
 \title{define an object as an ml_model type}
 \usage{
-ml_model(model, model_name = NULL, feature_names = NULL, label_names = NULL)
+ml_model(
+  model,
+  name = NULL,
+  feature_names = NULL,
+  label_names = NULL,
+  hooks = list()
+)
 }
 \arguments{
 \item{model}{object with a machine learning model (e.g. lm, glm, xgboost)}
 
-\item{model_name}{character}
+\item{name}{character, a unique name for the model}
 
 \item{feature_names}{character, vector of feature names. If NULL,
 feature names will be guessed from the model object}
 
 \item{label_names}{character, vector of labels for multi-class
 classification.}
+
+\item{hooks}{objects of class ml_hooks, or a list of ml_hook objects}
 }
 \value{
-the same object with a new class 'ml_model'
+an object holding the model and book-keeping metadata
 }
 \description{
 define an object as an ml_model type
