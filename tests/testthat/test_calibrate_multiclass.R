@@ -12,11 +12,11 @@ test_that("calibration should work even with a single model", {
   # calibration and test data
   calib_data <- data.table(cbind(x=rnorm(30), y=rnorm(30)))
   calib_data$label <- rep(c(0, 1), nrow(calib_data)/2)
-  expect_silent(p0 <- predict(me0, newdata=as.matrix(calib_data)))
-  me1 <- calibrate(me0,
-                   data=as.matrix(calib_data[, c("x", "y")]),
-                   label=calib_data$label)
-  expect_silent(p1 <- predict(me1, newdata=as.matrix(calib_data)))
+  expect_silent(p0 <- predict(me0, data=as.matrix(calib_data)))
+  me1 <- suppressWarnings(calibrate(me0,
+                                    data=as.matrix(calib_data[, c("x", "y")]),
+                                    label=calib_data$label))
+  expect_silent(p1 <- predict(me1, data=as.matrix(calib_data)))
   # there should be two calibration models (two labels)
   expect_equal(length(me1$calibration), 2)
   # the outputs without and with calibration should be slightly different
@@ -25,25 +25,26 @@ test_that("calibration should work even with a single model", {
 
 
 test_that("calibration should mitigate class inbalance", {
+  # m_mc_pop0 and m_mc_pop1 are trained with different proportions of
+  # items in class 0 and 1
   m0 <- ml_model(m_mc_pop0)
   m1 <- ml_model(m_mc_pop1)
   me0 <- ml_model(m_mc_pop0) + ml_model(m_mc_pop1)
-  # calibration and test data
-  calib_data <- data.table(cbind(x=rnorm(80), y=rnorm(80)))
+  # calibration and test data have equal proportions of two classes
+  calib_data <- data.table(cbind(x=rnorm(20, 0, 2), y=rnorm(20, 0, 2)))
   calib_data$label <- rep(c(0,1), nrow(calib_data)/2)
-  test_data <- cbind(x=rnorm(100), y=rnorm(100))
+  test_data <- cbind(x=rnorm(40, 0, 2), y=rnorm(40, 0, 2))
   me1 <- calibrate(me0,
                    data=as.matrix(calib_data[, c("x", "y")]),
                    label=calib_data$label)
   # compute predictions
-  p0 <- apply(predict(m0, newdata=test_data), 1, which.max)-1
-  p1 <- apply(-1+predict(m1, newdata=test_data), 1, which.max)-1
-  expect_warning(pe0 <- apply(predict(me0, newdata=test_data), 1, which.max)-1)
-  pe1 <- apply(predict(me1, newdata=test_data), 1, which.max)-1
+  p0 <- apply(predict(m0, data=test_data), 1, which.max)-1
+  p1 <- apply(-1+predict(m1, data=test_data), 1, which.max)-1
+  expect_warning(pe0 <- apply(predict(me0, data=test_data), 1, which.max)-1)
+  pe1 <- apply(predict(me1, data=test_data), 1, which.max)-1
   # compute the fraction of points that fall into the dominant class
   dom_frac <- function(z) {
-    ztab <- sort(table(z), decreasing=TRUE)
-    as.numeric(ztab[1]/sum(ztab))
+    max(table(z)) / length(z)
   }
   # ensemble should even out inbalance
   expect_lte(dom_frac(pe0), dom_frac(p1))
@@ -69,9 +70,9 @@ test_that("calibration with models predicting different labels", {
   me <- m1 + m2
   test_data <- as.matrix(testdata_mc[, c("x", "y")])
   # predictions (warning because the ensemble is not calibrated)
-  p1 <- predict(m1, newdata=test_data)
-  p2 <- predict(m2, newdata=test_data)
-  expect_warning(pe <- predict(me, newdata=test_data))
+  p1 <- predict(m1, data=test_data)
+  p2 <- predict(m2, data=test_data)
+  expect_warning(pe <- predict(me, data=test_data))
   # p1 only predicts Q1, Q2, Q3
   expect_equal(sum(call_softmax(p1)=="Q4"), 0)
   # p2 only predicts (q1, Q3, Q4)
@@ -96,8 +97,8 @@ test_that("calibration can eliminate labels", {
   # test data using all quadrants
   test_data <- as.matrix(testdata_mc[!i_even, c("x", "y")])
   test_labels <- testdata_mc[!i_even, ]$label
-  mec3 <- calibrate(me, calib_data_3, calib_labels_3)
-  mec4 <- calibrate(me, calib_data_4, calib_labels_4)
+  mec3 <- suppressWarnings(calibrate(me, calib_data_3, calib_labels_3))
+  mec4 <- suppressWarnings(calibrate(me, calib_data_4, calib_labels_4))
   oute3 <- predict(mec3, test_data)
   oute4 <- predict(mec4, test_data)
   # four-quadrant calibration will predict label_3 sometimes

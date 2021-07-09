@@ -4,12 +4,12 @@
 \alias{predict.ml_ensemble}
 \title{use an ensemble of models (ml_ensembl) to predict output for a new dataset}
 \usage{
-\method{predict}{ml_ensemble}(ensemble, newdata, type = "response", ...)
+\method{predict}{ml_ensemble}(object, data, type = "response", ...)
 }
 \arguments{
-\item{ensemble}{object of class ml_ensemble}
+\item{object}{object of class ml_ensemble}
 
-\item{newdata}{object with data to operate on, e.g. matrix or data frame as
+\item{data}{object with data to operate on, e.g. matrix or data frame as
 appropriate for the ensemble of models}
 
 \item{type}{character, passed to predict()}

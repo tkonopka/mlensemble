@@ -10,7 +10,7 @@ if (!exists("d_linear")) {
 test_that("predict a single class with ml_model", {
   m <- ml_model(m_mc_1)
   test_data <- cbind(x=2, y=2)
-  result <- predict(m, newdata=test_data)
+  result <- predict(m, data=test_data)
   # result should be a matrix with class probabilities
   expect_equal(dim(result), c(1, 4))
   # the positive quadrant is the first class (by default label_0)
@@ -23,7 +23,7 @@ test_that("predict a single value with ml_ensemble", {
   m <- ml_model(m_mc_1) + ml_model(m_mc_2)
   test_data <- cbind(x=2, y=2)
   # expect warning because ensemble is not calibrated
-  expect_warning(result <- predict(m, newdata=test_data))
+  expect_warning(result <- predict(m, data=test_data))
   # result should be a matrix with class probabilities
   expect_equal(dim(result), c(1, 4))
   expect_equal(as.integer(which.max(result[1,])), 1)
@@ -34,7 +34,7 @@ test_that("predict a single value with ml_ensemble", {
 test_that("predict many values with ml_model", {
   m <- ml_model(m_mc_1)
   test_data <- cbind(x=c(2,2), y=c(2, -2))
-  result <- predict(m, newdata=test_data)
+  result <- predict(m, data=test_data)
   result_labels <- call_softmax(result)
   expect_equal(nrow(result), nrow(test_data))
   expect_false(result_labels[1] == result_labels[2])
@@ -44,8 +44,8 @@ test_that("predict many values with ml_model", {
 test_that("predict many values with ml_model, too many features", {
   m <- ml_model(m_mc_1)
   test_data <- cbind(x=c(2,2), y=c(2, -2), z=c(0, 100))
-  result_2 <- predict(m, newdata=test_data[, c("x", "y")])
-  result_3 <- predict(m, newdata=test_data[, c("x", "y", "z")])
+  result_2 <- predict(m, data=test_data[, c("x", "y")])
+  result_3 <- predict(m, data=test_data[, c("x", "y", "z")])
   expect_equal(nrow(result_2), nrow(test_data))
   # feature "z" does not play a role in the model
   expect_equal(result_2, result_3)
@@ -55,7 +55,7 @@ test_that("predict many values with ml_model, too many features", {
 test_that("predict many values with ml_model, too few features", {
   m <- ml_model(m_mc_1)
   test_data <- cbind(x=c(2,2))
-  result <- predict(m, newdata=test_data)
+  result <- predict(m, data=test_data)
   # the model uses features x and y, here y is missing
   # but the model should still be able to predict something
   expect_equal(nrow(result), nrow(test_data))
@@ -66,7 +66,7 @@ test_that("predict many values with ml_ensemble", {
   m <- ml_model(m_mc_1) + ml_model(m_mc_2)
   test_data <- cbind(x=c(2,2), y=c(2, -2))
   # expect warning because ensemble is not calibrated
-  expect_warning(result <- predict(m, newdata=test_data))
+  expect_warning(result <- predict(m, data=test_data))
   # result should be a matrix with four columns
   expect_equal(dim(result), c(nrow(test_data), 4))
 })
@@ -79,8 +79,8 @@ test_that("predict many values with ml_ensemble, using label names", {
   m1 <- ml_model(m_mc_1, label_names=abcd) + ml_model(m_mc_2, label_names=abcd)
   test_data <- cbind(x=c(2,2), y=c(2, -2))
   # expect warning because ensemble is not calibrated
-  expect_warning(result0 <- predict(m0, newdata=test_data))
-  expect_warning(result1 <- predict(m1, newdata=test_data))
+  expect_warning(result0 <- predict(m0, data=test_data))
+  expect_warning(result1 <- predict(m1, data=test_data))
   # numeric results should be similar for the two ensembles
   expect_equal(dim(result0), dim(result1))
   expect_equal(result0[,1], result1[,1])
@@ -110,10 +110,10 @@ test_that("predictions with ensemble can integrate different labels", {
   test_data <- as.matrix(testdata_mc[seq(1, 120, by=3), c("x", "y")])
   test_labels <- testdata_mc$label[seq(1, 120, by=3)]
   # warnings because the the ensemble is not calibrated
-  expect_warning(ru <- predict(mu, newdata=test_data))
-  expect_warning(rurev <- predict(murev, newdata=test_data))
-  expect_warning(re <- predict(me, newdata=test_data))
-  expect_warning(rerev <- predict(merev, newdata=test_data))
+  expect_warning(ru <- predict(mu, data=test_data))
+  expect_warning(rurev <- predict(murev, data=test_data))
+  expect_warning(re <- predict(me, data=test_data))
+  expect_warning(rerev <- predict(merev, data=test_data))
   hit_rate <- function(x) {
     mean(apply(x, 1, which.max)-1 == test_labels)
   }
@@ -141,9 +141,9 @@ test_that("predictions with ensemble should be more accurate that ml_model", {
   expected[test_data[,1]<0 & test_data[,2]<0] <- 3
   expected[test_data[,1]>0 & test_data[,2]>0] <- 4
   # compute predictions and errors
-  p1 <- apply(predict(m1, newdata=test_data), 1, which.max)
-  p2 <- apply(predict(m2, newdata=test_data), 1, which.max)
-  expect_warning(pe <- apply(predict(me, newdata=test_data), 1, which.max))
+  p1 <- apply(predict(m1, data=test_data), 1, which.max)
+  p2 <- apply(predict(m2, data=test_data), 1, which.max)
+  expect_warning(pe <- apply(predict(me, data=test_data), 1, which.max))
   e1 <- sum(p1 != expected)
   e2 <- sum(p2 != expected)
   ee <- sum(pe != expected)
@@ -165,9 +165,9 @@ test_that("predictions using models that use different features", {
   expected[test_data[,1]<0 & test_data[,2]<0] <- 3
   expected[test_data[,1]>0 & test_data[,2]>0] <- 4
   # compute predictions and errors
-  px <- apply(predict(mx, newdata=test_data), 1, which.max)
-  py <- apply(predict(my, newdata=test_data), 1, which.max)
-  expect_warning(pe <- apply(predict(me, 1, newdata=test_data), 1, which.max))
+  px <- apply(predict(mx, data=test_data), 1, which.max)
+  py <- apply(predict(my, data=test_data), 1, which.max)
+  expect_warning(pe <- apply(predict(me, 1, data=test_data), 1, which.max))
   ex <- sum(px != expected)
   ey <- sum(py != expected)
   ee <- sum(pe != expected)

@@ -39,6 +39,6 @@ lm_1 = lm(y~x, data=data.frame(x=1:2, y=1:2))
 ml_model(lm_1)
 
 # use a custom name
-ml_model(lm_1, model_name="linear_model_1")
+ml_model(lm_1, name="linear_model_1")
 
 }

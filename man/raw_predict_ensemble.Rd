@@ -4,12 +4,12 @@
 \alias{raw_predict_ensemble}
 \title{use an ensemble of models to predict on new data}
 \usage{
-raw_predict_ensemble(ensemble, newdata, ...)
+raw_predict_ensemble(ensemble, data, ...)
 }
 \arguments{
 \item{ensemble}{object of class ml_ensemble}
 
-\item{newdata}{object with data}
+\item{data}{object with data}
 
 \item{...}{other arguments passed to predict}
 }

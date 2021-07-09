@@ -17,7 +17,7 @@ Display a simple summary of an ml_ensemble object
 \examples{
 
 lm_1 = lm(y~x, data=data.frame(x=1:2, y=-0.2 + 1:2))
-lm_2 = lm(Y~x, data=data.frame(x=1:2, y=+0.2 + 1:2))
+lm_2 = lm(y~x, data=data.frame(x=1:2, y=+0.2 + 1:2))
 ensemble = ml_model(lm_1) + ml_model(lm_2)
 print(ensemble)
 

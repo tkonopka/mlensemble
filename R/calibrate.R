@@ -9,20 +9,34 @@
 #' appropriate for the model ensemble
 #' @param label vector with expected predictions, e.g. numeric values for
 #' regression, or integer/character values for classification
+#' @param weight numeric vector with weights for data items
 #'
 #' @return object of class ml_ensemble
 #'
 #' @examples
 #'
-calibrate <- function(ensemble, data, label) {
+#' # prep:
+#' # linear model trained on a dataset with y=x
+#' y_eq_x <- data.frame(x=1:10, y=1:10)
+#' ensemble <- ml_ensemble() + ml_model(glm(y~x, data=y_eq_x))
+#'
+#' # calibration
+#' # simple calibration on new data with a shift, y=x+2
+#' y_eq_x_2 <- data.frame(x=1:6, y=1:6 + 2)
+#' ensemble_calibrated <- calibrate(ensemble, y_eq_x_2, y_eq_x_2$y)
+#'
+#' # calibration on new data with outliers
+#' y_eq_x_outliers <- data.frame(x=1:6, y=c(1:5, 99))
+#' ensemble_calibrated_weights <-
+#'    calibrate(ensemble, y_eq_x_outliers, y_eq_x_outliers$y, weight=c(1:5, 0))
+#'
+calibrate <- function(ensemble, data, label, weight) {
+  if (missing(weight)) weight <- rep(1, length(label))
+  stopifnot(length(label)==length(weight))
   # get predictions from each model
-  raw <- raw_predict_ensemble(ensemble, data)
-  raw <- standardize_raw(raw)
+  raw <- standardize_raw(raw_predict_ensemble(ensemble, data))
   n <- ncol(raw[[1]])
-  calibration_family <- gaussian
-  if (n>1) {
-    calibration_family <- binomial
-  }
+  calibration_family <- ifelse(n>1, binomial, gaussian)
   label <- label_matrix(label, n>1)
   # check that all labels can be calibrated
   raw_labels <- unique(unlist(lapply(raw, colnames)))
@@ -34,7 +48,7 @@ calibrate <- function(ensemble, data, label) {
   # build models for each label
   # (one model for regression, many models for multi-class classification)
   result <- lapply(colnames(label), function(j) {
-    calibrate_one(raw, label, j, calibration_family)
+    calibrate_one(raw, label, weight, j, calibration_family)
   })
   ensemble$calibration <- setNames(result, colnames(label))
   ensemble
@@ -47,11 +61,12 @@ calibrate <- function(ensemble, data, label) {
 #' @noRd
 #' @param raw list of matrices with predictions
 #' @param label matrix with expected predictions
+#' @param weight vector with weights associated to data items and labels
 #' @param j character, column in label to consider
 #' @param family description of error distribution
 #'
 #' @return glm model
-calibrate_one <- function(raw, label, j, family) {
+calibrate_one <- function(raw, label, weight, j, family) {
   d <- data.frame(matrix(0, ncol=length(raw)+1, nrow=nrow(label)))
   colnames(d) <- c(".output", names(raw))
   d$.output <- label[,j]
@@ -64,7 +79,8 @@ calibrate_one <- function(raw, label, j, family) {
   }
   d_features <- intersect(names(raw), colnames(d))
   f <- paste0(".output ~ ", paste0(d_features, collapse="+"))
-  glm(as.formula(f), data=d, family=family, model=FALSE)
+  glm(as.formula(f), data=d, weights=weight,
+      family=family, model=FALSE)
 }
 
 

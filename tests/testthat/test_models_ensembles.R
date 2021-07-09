@@ -14,6 +14,15 @@ test_that("create simple ml_model objects", {
 })
 
 
+test_that("create simple ml_model object (inline)", {
+  xy <- data.frame(x= 1:8, y=1:8)
+  result <- ml_model(lm(y~x, data=xy))
+  expect_true(is(result, "ml_model"))
+  expect_equal(result$model_name, "lm")
+  expect_equal(result$feature_names, "x")
+})
+
+
 test_that("create simple ml_ensemble objects", {
   result <- ml_ensemble()
   expect_true(is(result, "ml_model"))

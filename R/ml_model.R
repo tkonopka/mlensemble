@@ -22,14 +22,15 @@
 #' ml_model(lm_1)
 #'
 #' # use a custom name
-#' ml_model(lm_1, model_name="linear_model_1")
+#' ml_model(lm_1, name="linear_model_1")
 #'
 ml_model <- function(model, name=NULL,
                      feature_names=NULL, label_names=NULL,
                      hooks=list()) {
-  model_name <- name
   if (is.null(name)) {
-    model_name <- deparse(substitute(model))
+    model_name <- trim_model_name(deparse(substitute(model)))
+  } else {
+    model_name <- trim_model_name(name)
   }
   if (is.null(feature_names)) {
     feature_names <- guess_feature_names(model)
@@ -45,6 +46,19 @@ ml_model <- function(model, name=NULL,
   result
 }
 
+
+#' trim a model name into alphanumeric, underscore, and dot
+#'
+#' @param x character
+#'
+#' @return character, model name, suitable as a data frame column
+trim_model_name <- function(x) {
+  result <- unlist(strsplit(x, "\\(| |\\)"))[1]
+  result <- unlist(strsplit(result, ""))
+  alphanumeric <- c(letters, LETTERS, as.character(0:9), ".", "_")
+  result <- result[result %in% alphanumeric]
+  paste(result, collapse="")
+}
 
 
 #' guess a list of features names from a machine-learning model

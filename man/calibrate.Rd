@@ -4,7 +4,7 @@
 \alias{calibrate}
 \title{redefine weights assigned to models in an ensemble}
 \usage{
-calibrate(ensemble, data, label)
+calibrate(ensemble, data, label, weight)
 }
 \arguments{
 \item{ensemble}{object of class 'ml_ensemble'}
@@ -14,6 +14,8 @@ appropriate for the model ensemble}
 
 \item{label}{vector with expected predictions, e.g. numeric values for
 regression, or integer/character values for classification}
+
+\item{weight}{numeric vector with weights for data items}
 }
 \value{
 object of class ml_ensemble
@@ -22,5 +24,20 @@ object of class ml_ensemble
 redefine weights assigned to models in an ensemble
 }
 \examples{
+
+# prep:
+# linear model trained on a dataset with y=x
+y_eq_x <- data.frame(x=1:10, y=1:10)
+ensemble <- ml_ensemble() + ml_model(glm(y~x, data=y_eq_x))
+
+# calibration
+# simple calibration on new data with a shift, y=x+2
+y_eq_x_2 <- data.frame(x=1:6, y=1:6 + 2)
+ensemble_calibrated <- calibrate(ensemble, y_eq_x_2, y_eq_x_2$y)
+
+# calibration on new data with outliers
+y_eq_x_outliers <- data.frame(x=1:6, y=c(1:5, 99))
+ensemble_calibrated_weights <-
+   calibrate(ensemble, y_eq_x_outliers, y_eq_x_outliers$y, weight=c(1:5, 0))
 
 }

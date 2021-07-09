@@ -5,21 +5,24 @@
 #'
 #' @export
 #' @param f function
-#' @param hook_name character, a name/identifier for the hook
-#' @param hook_type character, vector of feature names. If NULL,
+#' @param name character, a name/identifier for the hook
+#' @param type character, vector of feature names. If NULL,
 #'    feature names will be guessed from the model object
+#' @param order numeric, determines the order/priority of a hook when it is
+#' used within a collection of many other hooks
 #'
 #' @return the same object with a new class 'ml_model'
 #'
 #' @examples
 #'
-#' lm_1 = lm(y~x, data=data.frame(x=1:2, y=1:2))
-#'
-#' # default constructor
-#' ml_model(lm_1)
-#'
-#' # use a custom name
-#' ml_model(lm_1, model_name="linear_model_1")
+#' # define a hook function that replaces NA of "x" in a data frame
+#' fill_NA <- function(d) {
+#'   d[is.na(d$x), "x"] <- mean(d$x, na.rm=TRUE)
+#'   d
+#' }
+#' # define a hook using fill_NA as a pre-processing operation
+#' hook <- ml_hook(fill_NA, type="pre")
+#' hook
 #'
 ml_hook <- function(f, name=NULL, type=c("pre", "post"), order=1) {
   hook_type <- match.arg(type)

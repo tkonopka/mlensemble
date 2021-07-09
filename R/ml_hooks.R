@@ -5,16 +5,26 @@
 #'
 #' @export
 #' @param x list of ml_hook objects
+#'
 #' @return a list-like object
 #'
 #' @examples
 #'
+#' # empty collection of hooks
 #' my_hooks <- ml_hooks()
+#' my_hooks
+#'
+#' # prep: hook functions
+#' hook_fun_1 <- function(x) { x**2 }
+#' hook_fun_2 <- function(x) { sqrt(2) }
+#' # list of hook objects, and object containing the list of hooks
+#' hook_list <- list(ml_hook(hook_fun_1), ml_hook(hook_fun_2))
+#' my_hooks <- ml_hooks(hook_list)
 #' my_hooks
 #'
 ml_hooks <- function(x=list()) {
   result <- x
-  class(result) <- c("ml_hooks")
+  class(result) <- "ml_hooks"
   result
 }
 

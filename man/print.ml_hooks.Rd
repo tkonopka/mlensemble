@@ -19,7 +19,7 @@ Display a simple summary of a list of ml_hook objects
 my_fun = function(x) {
   x / apply(x, 1, sum)
 }
-my_hooks = ml_hooks() + ml_hook(my_fun)
+my_hooks = ml_hooks(list(ml_hook(my_fun)))
 my_hooks
 
 }

@@ -29,3 +29,22 @@ test_that("standardize labels into a class matrix", {
   expect_equal(result[, "label_2"], c(1, 0, 0))
 })
 
+
+test_that("example in calibrate", {
+  y_eq_x <- data.frame(x=1:10, y=1:10)
+  ensemble <- ml_ensemble() + ml_model(glm(y~x, data=y_eq_x))
+  # simple calibration on new data with a shift, y=x+2
+  y_eq_x_2 <- data.frame(x=1:6, y=1:6 + 2)
+  ensemble_calibrated <- calibrate(ensemble, data=y_eq_x_2, label=y_eq_x_2$y)
+  p_calibrated <- predict(ensemble_calibrated, y_eq_x_2)
+  expect_equal(as.numeric(p_calibrated), 1:6 + 2)
+  # calibration on new data with a shift, y=x+1, and an outlier
+  y_eq_x_outliers <- data.frame(x=1:6, y=c(1:5, 99) + 1)
+  ensemble_calibrated_weights <-
+    calibrate(ensemble, y_eq_x_outliers, y_eq_x_outliers$y, weight=c(1:5, 0))
+  # if weighting works, the outlier value for y will be ignored, and the
+  # predictions should set y=x+1
+  p_weights <- predict(ensemble_calibrated_weights, y_eq_x_outliers)
+  expect_equal(as.numeric(p_weights), 1:6 + 1)
+})
+

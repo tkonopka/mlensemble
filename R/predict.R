@@ -1,41 +1,25 @@
 # using ml_model and ml_ensemble to create predictions
 
 
-#' cut a matrix, data.frame, or data table to certains columns
-#'
-#' @param x matrix, data.frame, or data.table
-#' @param col_names character, vector with feature names to keep
-#'
-#' @return object similar to x, cut to certain columns only
-cut_to_features <- function(x, col_names) {
-  if (is(x, "data.table")) {
-    result <- x[, col_names, with=FALSE]
-  } else {
-    result <- x[, col_names, drop=FALSE]
-  }
-  result
-}
-
-
 #' prepare a data object so that it includes all required features
 #'
-#' @param newdata object with data to operate on, e.g. matrix or data.frame
+#' @param data object with data to operate on, e.g. matrix or data.frame
 #' @param feature_names character, vector with feature names
 #'
-#' @return object with data holding expected features; some features in newdata
+#' @return object with data holding expected features; some features in data
 #' may be omitted, and other features added with NA values
-prepare_newdata <- function(newdata, feature_names) {
-  if (!is(newdata, "data.frame") & !is(newdata, "matrix")) {
-    return(newdata)
+prepare_data <- function(data, feature_names) {
+  if (!is(data, "data.frame") & !is(data, "matrix")) {
+    return(data)
   }
-  keep_features <- intersect(colnames(newdata), feature_names)
-  result <- cut_to_features(newdata, keep_features)
-  missing_features <- setdiff(feature_names, colnames(newdata))
+  keep_features <- intersect(colnames(data), feature_names)
+  result <- subset(data, select=keep_features)
+  missing_features <- setdiff(feature_names, colnames(data))
   n_missing <- length(missing_features)
   if (n_missing) {
-    missing_data <- matrix(as.integer(NA), nrow=nrow(newdata), ncol=n_missing)
+    missing_data <- matrix(as.integer(NA), nrow=nrow(data), ncol=n_missing)
     colnames(missing_data) <- missing_features
-    result <- cut_to_features(cbind(result, missing_data), feature_names)
+    result <- subset(cbind(result, missing_data), select=feature_names)
   }
   result
 }
@@ -50,17 +34,17 @@ prepare_newdata <- function(newdata, feature_names) {
 #' @param ... other arguments passed to predict()
 #'
 #' @return prediction of the model "object" on a dataset "data"
-predict.ml_model <- function(object, newdata, type="response", ...) {
-  prepped_data <- apply_hooks(object$hooks, newdata, type="pre")
-  prepped_data <- prepare_newdata(prepped_data, object$feature_names)
+predict.ml_model <- function(object, data, type="response", ...) {
+  prepped_data <- apply_hooks(object$hooks, data, type="pre")
+  prepped_data <- prepare_data(prepped_data, object$feature_names)
   if (is(object$model, "function")) {
     result <- object$model(prepped_data, type=type, ...)
   } else {
     result <- predict(object$model, prepped_data, type=type, ...)
   }
-  if (length(result) > nrow(newdata)) {
+  if (length(result) > nrow(data)) {
     if (!is(result, "matrix")) {
-      result <- matrix(result, byrow=TRUE, nrow=nrow(newdata))
+      result <- matrix(result, byrow=TRUE, nrow=nrow(data))
     }
     colnames(result) <- object$label_names
     if (is.null(object$label_names)) {
@@ -74,18 +58,17 @@ predict.ml_model <- function(object, newdata, type="response", ...) {
 #' use an ensemble of models to predict on new data
 #'
 #' @param ensemble object of class ml_ensemble
-#' @param newdata object with data
+#' @param data object with data
 #' @param ... other arguments passed to predict
 #'
 #' @return list of raw predictions
-raw_predict_ensemble <- function(ensemble, newdata, ...) {
+raw_predict_ensemble <- function(ensemble, data, ...) {
   result <- lapply(ensemble$models,
                    function(z) {
-                     predict(z, newdata, ...)
+                     predict(z, data, ...)
                    })
-  model_names <- vapply(ensemble$models, function(z) { z$model_name },
-                        character(1))
-  names(result) <- model_names
+  names(result) <- vapply(ensemble$models, function(z) { z$model_name },
+                          character(1))
   result
 }
 
@@ -93,37 +76,37 @@ raw_predict_ensemble <- function(ensemble, newdata, ...) {
 #' use an ensemble of models (ml_ensembl) to predict output for a new dataset
 #'
 #' @export
-#' @param ensemble object of class ml_ensemble
-#' @param newdata object with data to operate on, e.g. matrix or data frame as
+#' @param object object of class ml_ensemble
+#' @param data object with data to operate on, e.g. matrix or data frame as
 #' appropriate for the ensemble of models
 #' @param type character, passed to predict()
 #' @param ... other arguments, passed to predict()
 #'
 #' @return object of class ml_ensemble
-predict.ml_ensemble <- function(ensemble, newdata, type="response", ...) {
-  if (length(ensemble$models)==0) {
+predict.ml_ensemble <- function(object, data, type="response", ...) {
+  if (length(object$models)==0) {
     stop("ml_ensemble is empty")
   }
 
   # produce predictions from the individual models
-  result <- apply_hooks(ensemble$hooks, newdata, type="pre")
-  result <- raw_predict_ensemble(ensemble, result)
+  result <- apply_hooks(object$hooks, data, type="pre")
+  result <- raw_predict_ensemble(object, result)
 
   # compute reduction
-  if (identical(ensemble$calibration, NA) & length(result)>1) {
+  if (identical(object$calibration, NA) & length(result)>1) {
     warning("ml_ensemble is not calibrated - using equal model weights")
   }
   reduce_fun <- reduce_vector
   if (is(result[[1]], "matrix")) {
     reduce_fun <- reduce_matrix
   }
-  result <- reduce_fun(result, ensemble$calibration)
+  result <- reduce_fun(result, object$calibration)
 
   if (is(result, "matrix")) {
-    rownames(result) <- rownames(newdata)
+    rownames(result) <- rownames(data)
   } else {
-    names(result) <- rownames(newdata)
+    names(result) <- rownames(data)
   }
-  apply_hooks(ensemble$hooks, result, type="post")
+  apply_hooks(object$hooks, result, type="post")
 }
 

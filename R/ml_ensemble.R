@@ -16,7 +16,7 @@
 #'
 #' # ensemble with several models
 #' lm_1 = lm(y~x, data=data.frame(x=1:2, y=-0.2 + 1:2))
-#' lm_2 = lm(Y~x, data=data.frame(x=1:2, y=+0.2 + 1:2))
+#' lm_2 = lm(y~x, data=data.frame(x=1:2, y=+0.2 + 1:2))
 #' ensemble = ml_model(lm_1) + ml_model(lm_2)
 #'
 ml_ensemble <- function(name=NULL, hooks=list()) {
@@ -67,7 +67,6 @@ add_ml_model <- function(ensemble, model) {
 #'
 "+.ml_model" <- function(m1, m2) {
   is_ensemble1 <- is(m1, "ml_ensemble")
-  is_ensemble2 <- is(m2, "ml_ensemble")
   if (is_ensemble1) {
     result <- add_ml_model(m1, m2)
   } else {

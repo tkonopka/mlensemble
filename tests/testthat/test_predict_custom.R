@@ -12,7 +12,7 @@ test_that("predict single using an ml_model based on a custom function", {
   m <- ml_model(my_pred, feature_names="x",
                 label_names=c("negative", "positive"))
   test_data <- cbind(x=2, y=2)
-  result <- predict(m, newdata=test_data)
+  result <- predict(m, data=test_data)
   # result should be a matrix with class probabilities
   expect_equal(dim(result), c(1, 2))
   # the first column in test_data is positive, so the the prediction should
@@ -27,7 +27,7 @@ test_that("predict many using an ml_model based on a custom function", {
   m <- ml_model(my_pred, feature_names=c("x", "y"),
                 label_names=c("negative", "positive"))
   test_data <- cbind(x=c(2, 0, -1, -2), y=2)
-  result <- predict(m, newdata=test_data)
+  result <- predict(m, data=test_data)
   # result should be a matrix with class probabilities
   expect_equal(dim(result), c(4, 2))
   # the first column in test_data is positive, so the the prediction should

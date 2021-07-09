@@ -4,16 +4,16 @@
 \alias{predict.ml_model}
 \title{use an ml_model to predict output for a new dataset}
 \usage{
-\method{predict}{ml_model}(object, newdata, type = "response", ...)
+\method{predict}{ml_model}(object, data, type = "response", ...)
 }
 \arguments{
 \item{object}{object of class ml_model}
 
+\item{data}{object with data to operate on, e.g. matrix or data frame}
+
 \item{type}{character, code passed to predict()}
 
 \item{...}{other arguments passed to predict()}
-
-\item{data}{object with data to operate on, e.g. matrix or data frame}
 }
 \value{
 prediction of the model "object" on a dataset "data"

@@ -55,7 +55,7 @@ print.ml_hook <- function(x, ...) {
 #' my_fun = function(x) {
 #'   x / apply(x, 1, sum)
 #' }
-#' my_hooks = ml_hooks() + ml_hook(my_fun)
+#' my_hooks = ml_hooks(list(ml_hook(my_fun)))
 #' my_hooks
 #'
 print.ml_hooks <- function(x, ...) {
@@ -94,7 +94,7 @@ print.ml_model <- function(x, ...) {
 #' @examples
 #'
 #' lm_1 = lm(y~x, data=data.frame(x=1:2, y=-0.2 + 1:2))
-#' lm_2 = lm(Y~x, data=data.frame(x=1:2, y=+0.2 + 1:2))
+#' lm_2 = lm(y~x, data=data.frame(x=1:2, y=+0.2 + 1:2))
 #' ensemble = ml_model(lm_1) + ml_model(lm_2)
 #' print(ensemble)
 #'

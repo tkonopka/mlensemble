@@ -5,11 +5,12 @@ Authors@R:
     person("Tomasz", "Konopka", , "tokonopka@gmail.com", role = c("aut", "cre"))
 Author: Tomasz Konopka [aut, cre]
 Maintainer: Tomasz Konopka <tokonopka@gmail.com>
-Description: Ensembles of machine learning models
+Description: Ensembles of heterogeneous machine learning models can be used to adjust or correct predictions from an existing model.
 Depends:
     R (>= 3.6.0)
 Imports:
-    methods
+    methods,
+    stats
 License: BSD_3_clause + file LICENSE
 URL: https://github.com/tkonopka/mlensemble
 BugReports: https://github.com/tkonopka/mlensemble/issues
