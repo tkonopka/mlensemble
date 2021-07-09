@@ -51,12 +51,17 @@ prepare_newdata <- function(newdata, feature_names) {
 #'
 #' @return prediction of the model "object" on a dataset "data"
 predict.ml_model <- function(object, newdata, type="response", ...) {
-  result <- apply_hooks(object$hooks, newdata, type="pre")
-  result <- predict(object$model,
-                    prepare_newdata(result, object$feature_names),
-                    type=type, ...)
+  prepped_data <- apply_hooks(object$hooks, newdata, type="pre")
+  prepped_data <- prepare_newdata(prepped_data, object$feature_names)
+  if (is(object$model, "function")) {
+    result <- object$model(prepped_data, type=type, ...)
+  } else {
+    result <- predict(object$model, prepped_data, type=type, ...)
+  }
   if (length(result) > nrow(newdata)) {
-    result <- matrix(result, byrow=TRUE, nrow=nrow(newdata))
+    if (!is(result, "matrix")) {
+      result <- matrix(result, byrow=TRUE, nrow=nrow(newdata))
+    }
     colnames(result) <- object$label_names
     if (is.null(object$label_names)) {
       colnames(result) <- paste0("label_", -1 + seq_len(ncol(result)))

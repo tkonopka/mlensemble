@@ -61,3 +61,12 @@ test_that("composition of two ensembles gives a larger ensemble", {
   expect_equal(length(result12$models), 2)
 })
 
+
+test_that("create ml_model using a prediction function", {
+  # constructor with a custom function must provide feature names
+  expect_error(ml_model(predict_negative_or_positive), "feature names")
+  result <- ml_model(predict_negative_or_positive, feature_names="a")
+  expect_true(is(result, "ml_model"))
+  expect_equal(result$model_name, "predict_negative_or_positive")
+  expect_equal(result$feature_names, "a")
+})

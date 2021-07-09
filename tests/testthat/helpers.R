@@ -34,3 +34,19 @@ rowsum_norm <- function(x) {
   x / apply(x, 1, sum)
 }
 
+
+#' binary classification into negative and non-negative based on one feature
+#'
+#' @param x matrix with at least one numeric column
+#' @param ... other arguments (not used)
+#'
+#' @return matrix with two columns
+predict_negative_or_positive <- function(x, ...) {
+  result <- matrix(0, ncol=2, nrow=nrow(x))
+  x_sign <- sign(x[,1])
+  result[x_sign<0, 1] <- 1
+  result[x_sign>0, 2] <- 1
+  result[x_sign==0, c(1, 2)] <- c(0.5, 0.5)
+  result
+}
+
