@@ -1,4 +1,4 @@
-# test helper methods used during calibration
+# tests for helper functions used during calibration
 
 
 test_that("standardize raw predictions", {

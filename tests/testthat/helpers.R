@@ -1,4 +1,4 @@
-# helper functions used in the test suite
+# helper functions used only in the test suite (not in the package code)
 
 
 #' call the most probably class/label from xgboost softprob

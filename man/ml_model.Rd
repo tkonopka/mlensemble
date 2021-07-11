@@ -9,7 +9,8 @@ ml_model(
   name = NULL,
   feature_names = NULL,
   label_names = NULL,
-  hooks = list()
+  hooks = list(),
+  description = NA
 )
 }
 \arguments{
@@ -24,6 +25,10 @@ feature names will be guessed from the model object}
 classification.}
 
 \item{hooks}{objects of class ml_hooks, or a list of ml_hook objects}
+
+\item{description}{character, used in construction of plain-language
+summaries of the model; recommended to consist of a single sentence fragment
+starting with a verb, e.g. 'is a linear regression'.}
 }
 \value{
 an object holding the model and book-keeping metadata

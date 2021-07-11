@@ -1,5 +1,5 @@
 Package: mlensemble
-Title: Ensembles of machine learning models
+Title: Ensembles of Machine Learning Models
 Version: 0.0.1.0
 Authors@R: 
     person("Tomasz", "Konopka", , "tokonopka@gmail.com", role = c("aut", "cre"))

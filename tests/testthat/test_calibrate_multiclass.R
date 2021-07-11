@@ -31,7 +31,8 @@ test_that("calibration should mitigate class inbalance", {
   m1 <- ml_model(m_mc_pop1)
   me0 <- ml_model(m_mc_pop0) + ml_model(m_mc_pop1)
   # calibration and test data have equal proportions of two classes
-  calib_data <- data.table(cbind(x=rnorm(20, 0, 2), y=rnorm(20, 0, 2)))
+  calib_data <- data.table(cbind(x=rnorm(20, 0, 2),
+                                 y=rnorm(20, 0, 2)))
   calib_data$label <- rep(c(0,1), nrow(calib_data)/2)
   test_data <- cbind(x=rnorm(40, 0, 2), y=rnorm(40, 0, 2))
   me1 <- calibrate(me0,
@@ -40,7 +41,8 @@ test_that("calibration should mitigate class inbalance", {
   # compute predictions
   p0 <- apply(predict(m0, data=test_data), 1, which.max)-1
   p1 <- apply(-1+predict(m1, data=test_data), 1, which.max)-1
-  expect_warning(pe0 <- apply(predict(me0, data=test_data), 1, which.max)-1)
+  expect_warning(pe0 <- apply(predict(me0, data=test_data),
+                              1, which.max)-1)
   pe1 <- apply(predict(me1, data=test_data), 1, which.max)-1
   # compute the fraction of points that fall into the dominant class
   dom_frac <- function(z) {

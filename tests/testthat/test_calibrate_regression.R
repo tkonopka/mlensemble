@@ -1,4 +1,4 @@
-# test using calibration on classification models
+# test using calibration on regression models
 
 # create some simple datasets and models
 if (!exists("d_linear")) {

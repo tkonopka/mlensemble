@@ -1,5 +1,6 @@
 # convenience function: print
 
+
 #' create character strings to describe an ml_hook object
 #'
 #' @keywords internal
@@ -9,11 +10,11 @@
 #'
 #' @return character vector
 str.ml_hook <- function(x, in_list=FALSE, indent=0) {
-  result <- c(paste0("  name: ", x$hook_name),
-              paste0("  type: ", x$hook_type),
-              paste0("  order: ", x$hook_order))
+  result <- c(paste0("  name: ", x$name),
+              paste0("  type: ", x$type),
+              paste0("  order: ", x$order))
   if (in_list) {
-    result[1] <- paste0("- name: ", x$hook_name)
+    result[1] <- paste0("- name: ", x$name)
   } else {
     result <- c("ml_hook:", result)
   }
@@ -25,6 +26,7 @@ str.ml_hook <- function(x, in_list=FALSE, indent=0) {
 #' Display a simple summary of an ml_hook object
 #'
 #' @export
+#' @method print ml_hook
 #' @param x object of class ml_hook
 #' @param ... other parameters (not used)
 #'
@@ -47,6 +49,7 @@ print.ml_hook <- function(x, ...) {
 #' Display a simple summary of a list of ml_hook objects
 #'
 #' @export
+#' @method print ml_hooks
 #' @param x object of class ml_hooks
 #' @param ... other parameters (not used)
 #'
@@ -69,6 +72,7 @@ print.ml_hooks <- function(x, ...) {
 #' Display a simple summary of an ml_model object
 #'
 #' @export
+#' @method print ml_model
 #' @param x ml_model
 #' @param ... other parameters (not used)
 #'
@@ -79,7 +83,7 @@ print.ml_hooks <- function(x, ...) {
 #' print(model)
 #'
 print.ml_model <- function(x, ...) {
-  out <- paste0("ml_model: ", x$model_name)
+  out <- paste0("ml_model: ", x$name)
   message(paste(out, collapse="\n"))
   invisible(x)
 }
@@ -88,6 +92,7 @@ print.ml_model <- function(x, ...) {
 #' Display a simple summary of an ml_ensemble object
 #'
 #' @export
+#' @method print ml_ensemble
 #' @param x ml_ensemble
 #' @param ... other parameters (not used)
 #'
@@ -99,10 +104,9 @@ print.ml_model <- function(x, ...) {
 #' print(ensemble)
 #'
 print.ml_ensemble <- function(x, ...) {
-  out <- c(paste0("ml_ensemble: ", x$model_name),
-           "",
+  out <- c(paste0("ml_ensemble: ", x$name),
            paste("number of models: ", length(x$models)))
-  out_names <- vapply(x$models, function(z) { z$model_name}, character(1))
+  out_names <- vapply(x$models, function(z) { z$name}, character(1))
   out <- c(out, "model names:", paste0("  ", out_names))
   message(paste(out, collapse="\n"))
   invisible(x)

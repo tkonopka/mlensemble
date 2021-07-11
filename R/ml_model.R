@@ -11,6 +11,9 @@
 #' @param label_names character, vector of labels for multi-class
 #' classification.
 #' @param hooks objects of class ml_hooks, or a list of ml_hook objects
+#' @param description character, used in construction of plain-language
+#' summaries of the model; recommended to consist of a single sentence fragment
+#' starting with a verb, e.g. 'is a linear regression'.
 #'
 #' @return an object holding the model and book-keeping metadata
 #'
@@ -26,7 +29,7 @@
 #'
 ml_model <- function(model, name=NULL,
                      feature_names=NULL, label_names=NULL,
-                     hooks=list()) {
+                     hooks=list(), description=NA) {
   if (is.null(name)) {
     model_name <- trim_model_name(deparse(substitute(model)))
   } else {
@@ -37,10 +40,11 @@ ml_model <- function(model, name=NULL,
   }
   result <- list(
     model=model,
-    model_name=model_name,
+    name=model_name,
     feature_names=feature_names,
     label_names=label_names,
-    hooks=ml_hooks(hooks)
+    hooks=ml_hooks(hooks),
+    description=description
   )
   class(result) <- "ml_model"
   result
@@ -53,6 +57,7 @@ ml_model <- function(model, name=NULL,
 #'
 #' @return character, model name, suitable as a data frame column
 trim_model_name <- function(x) {
+  if (is.null(x)) return (x)
   result <- unlist(strsplit(x, "\\(| |\\)"))[1]
   result <- unlist(strsplit(result, ""))
   alphanumeric <- c(letters, LETTERS, as.character(0:9), ".", "_")

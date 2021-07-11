@@ -41,8 +41,8 @@ get_hooks <- function(x, type=c("pre", "post")) {
   type <- match.arg(type)
   hook_order <- vapply(x,
                        function(z) {
-                         if (z$hook_type!=type) return(as.numeric(NA))
-                         as.numeric(z$hook_order)
+                         if (z$type!=type) return(as.numeric(NA))
+                         as.numeric(z$order)
                        }, numeric(1))
   hook_rank <- sort.list(sort.list(hook_order))
   n_hooks <- sum(!is.na(hook_order))
@@ -74,7 +74,7 @@ apply_hooks <- function(hooks, data, type=c("pre", "post")) {
   result <- data
   selected_hooks <- get_hooks(hooks, type=type)
   for (i in seq_along(selected_hooks)) {
-    result <- selected_hooks[[i]]$hook_fun(result)
+    result <- selected_hooks[[i]]$fun(result)
   }
   result
 }

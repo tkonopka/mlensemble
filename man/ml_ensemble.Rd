@@ -4,12 +4,16 @@
 \alias{ml_ensemble}
 \title{define an ensemble of ml_model objects}
 \usage{
-ml_ensemble(name = NULL, hooks = list())
+ml_ensemble(name = NULL, hooks = list(), description = NA)
 }
 \arguments{
 \item{name}{character, a unique name for the model}
 
 \item{hooks}{object of class ml_hooks, or a list of ml_hook objects}
+
+\item{description}{character, used in construction of plain-language
+summaries of the ensemble; recommended to consist of a single sentence
+fragment starting with a verb, e.g. 'integrates predictions'.}
 }
 \value{
 object of class ml_ensemble

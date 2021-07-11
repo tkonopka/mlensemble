@@ -1,4 +1,5 @@
-# test adding models into ensembles
+# tests for helper functions used during calibration
+# (reducing predictions of multiple models into a single ensemble prediction)
 
 
 test_that("reduce by averaging (unweighted)", {

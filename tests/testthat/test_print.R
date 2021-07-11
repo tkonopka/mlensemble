@@ -1,4 +1,4 @@
-# test construction of hooks
+# test displaying package object using print
 
 # create some simple datasets and models
 if (!exists("d_linear")) {

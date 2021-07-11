@@ -63,12 +63,9 @@ predict.ml_model <- function(object, data, type="response", ...) {
 #'
 #' @return list of raw predictions
 raw_predict_ensemble <- function(ensemble, data, ...) {
-  result <- lapply(ensemble$models,
-                   function(z) {
-                     predict(z, data, ...)
-                   })
-  names(result) <- vapply(ensemble$models, function(z) { z$model_name },
-                          character(1))
+  models <- ensemble$models
+  result <- lapply(models, predict, data, ...)
+  names(result) <- vapply(models, function(z) { z$name }, character(1))
   result
 }
 

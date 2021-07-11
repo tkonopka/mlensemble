@@ -36,10 +36,10 @@ ml_hook <- function(f, name=NULL, type=c("pre", "post"), order=1) {
   }
 
   result <- list(
-    hook_fun=f,
-    hook_name=hook_name,
-    hook_type=hook_type,
-    hook_order=as.numeric(order)
+    fun=f,
+    name=hook_name,
+    type=hook_type,
+    order=as.numeric(order)
   )
   class(result) <- "ml_hook"
   result

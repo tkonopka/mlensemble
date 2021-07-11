@@ -6,6 +6,9 @@
 #' @export
 #' @param name character, a unique name for the model
 #' @param hooks object of class ml_hooks, or a list of ml_hook objects
+#' @param description character, used in construction of plain-language
+#' summaries of the ensemble; recommended to consist of a single sentence
+#' fragment starting with a verb, e.g. 'integrates predictions'.
 #'
 #' @return object of class ml_ensemble
 #'
@@ -19,16 +22,17 @@
 #' lm_2 = lm(y~x, data=data.frame(x=1:2, y=+0.2 + 1:2))
 #' ensemble = ml_model(lm_1) + ml_model(lm_2)
 #'
-ml_ensemble <- function(name=NULL, hooks=list()) {
-  model_name <- name
+ml_ensemble <- function(name=NULL, hooks=list(), description=NA) {
+  model_name <- trim_model_name(name)
   if (is.null(name)) {
-    model_name <- "ml-ensemble"
+    model_name <- "ml_ensemble"
   }
   result <- list(
     models=list(),
-    model_name=model_name,
+    name=model_name,
     calibration=NA,
-    hooks=ml_hooks(hooks)
+    hooks=ml_hooks(hooks),
+    description=description
   )
   class(result) <- c("ml_ensemble", "ml_model")
   result
@@ -42,11 +46,17 @@ ml_ensemble <- function(name=NULL, hooks=list()) {
 #' @param ensemble object of class ml_ensemble
 #' @param model object of class ml_model
 #'
-#' @return object of class ml_ensemble that incorporates the new model
+#' @return object of class ml_ensemble that incorporates the new model;
+#' note that any calibration data will be erased in the new ensemble
 add_ml_model <- function(ensemble, model) {
-  n <- length(ensemble$models)
+  existing_names <- vapply(ensemble$models, str_name, character(1))
+  model_name <- str_name(model)
+  if (model_name %in% existing_names) {
+    stop(paste0("cannot add model to ensemble: model name already exists '",
+                model_name, "'"))
+  }
   result <- ensemble
-  result$models[[n+1]] <- model
+  result$models[[length(ensemble$models)+1]] <- model
   result$calibration <- NA
   result
 }

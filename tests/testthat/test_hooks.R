@@ -4,9 +4,9 @@
 test_that("create a simple hook", {
   my_hook <- ml_hook(rowsum_norm, type="post")
   expect_is(my_hook, "ml_hook")
-  expect_is(my_hook$hook_fun, "function")
-  expect_equal(my_hook$hook_name, "rowsum_norm")
-  expect_equal(my_hook$hook_type, "post")
+  expect_is(my_hook$fun, "function")
+  expect_equal(my_hook$name, "rowsum_norm")
+  expect_equal(my_hook$type, "post")
 })
 
 
@@ -26,11 +26,11 @@ test_that("get hooks in order (pre and post)", {
   result_post <- get_hooks(hooks, type="post")
   # there should be one post hook
   expect_equal(length(result_post), 1)
-  expect_equal(result_post[[1]]$hook_name, "h2")
+  expect_equal(result_post[[1]]$name, "h2")
   # there should be two pre hooks, and the one with small order should be first
   expect_equal(length(result_pre), 2)
-  expect_equal(result_pre[[1]]$hook_name, "h3")
-  expect_equal(result_pre[[2]]$hook_name, "h1")
+  expect_equal(result_pre[[1]]$name, "h3")
+  expect_equal(result_pre[[2]]$name, "h1")
 })
 
 
@@ -44,8 +44,8 @@ test_that("get hooks in order (no post hooks)", {
   expect_equal(length(result_post), 0)
   # there should be two pre hooks, and the one with small order should be first
   expect_equal(length(result_pre), 2)
-  expect_equal(result_pre[[1]]$hook_name, "h1")
-  expect_equal(result_pre[[2]]$hook_name, "h3")
+  expect_equal(result_pre[[1]]$name, "h1")
+  expect_equal(result_pre[[2]]$name, "h3")
 })
 
 
