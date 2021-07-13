@@ -1,0 +1,67 @@
+## Hooks
+
+Hooks are functions that are executed at predefined points in a pipeline.
+In the context of a machine learning pipelines, such functions can be used to
+pre-process data before applying a machine learning model, or to post-process
+outputs.
+
+As an example, consider that future data may be supplied in a different format
+with variables denoted as `X1` and `X2` instead of the names `x1` and `x2` used
+for training.
+
+```{r}
+uppercase_data <- data.frame(
+  X1 = seq(1, 4) + rnorm(4, 0, 0.2),
+  X2 = seq(1, 4) + rnorm(4, 0, 0.2)
+)
+```
+
+Direct application models trained on dataset with variables `x1` and `x2` is
+bound to give either errors or incomplete outputs. For example,
+
+```{r}
+predict(e_lm_calib, uppercase_data)
+```
+
+To make prediction on such new datasets, the data should be adjusted before
+performing the prediction. This transformation can be incorporated into an
+`ml_model` or `ml_ensemble` via a hook.
+
+```{r}
+df_lowercase <- function(x) {
+  colnames(x) <- tolower(colnames(x))
+  x
+}
+hook_df_lowercase <- ml_hook(df_lowercase, type="pre")
+hook_df_lowercase
+```
+
+The function `df_lowercase` takes one argument and returns one object. The
+hook object `hook_df_lowercase` is defined specifying that `df_lowercase`
+should be used as pre-processing step.
+
+A list of hooks can be attached to a model in the `ml_model` constructor.
+
+```{r}
+e_models_with_hooks <-
+  ml_model(lm(y ~ x1, data=d), name="lm_x1", hooks=list(hook_df_lowercase)) +
+    ml_model(lm(y ~ x2, data=d), name="lm_x2", hooks=list(hook_df_lowercase))
+```
+
+This construction is reasonable if models require different sets of pre- and
+post-processing steps. When a step can be applied just once, then a hook can
+be associated with the ensemble instead.
+
+```{r}
+e_with_hooks <- ml_ensemble(hooks=list(hook_df_lowercase)) +
+        ml_model(lm(y ~ x1, data=d), name="lm_x1") +
+        ml_model(lm(y ~ x2, data=d), name="lm_x2")
+e_with_hooks_calib <- calibrate(e_with_hooks, calib_data, label=calib_data$y)
+predict(e_with_hooks_calib, uppercase_data)
+```
+
+Thanks to the pre-processing transformation, the ensemble generates predictions
+even though the new data is not in the same format as the training data.
+
+For further details on how to define hooks, see `help(ml_hook)`. For details
+on how to attach hooks, see `help(ml_model)` and `help(ml_ensemble)`.

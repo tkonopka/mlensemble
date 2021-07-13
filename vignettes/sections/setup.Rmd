@@ -1,0 +1,27 @@
+## Setup
+
+The vignette relies on package `mlensemble`.
+
+```{r, eval=TRUE, echo=TRUE}
+library(mlensemble)
+```
+
+Examples refer to a regression task based on a small synthetic dataset.
+Consider a variable `x` with linear relationships to variables `x1`, `x2`, and
+`y`. Consider that `x` is not observable, and that training data consist of
+noisy measurements of the other quantities.
+
+```{r, eval=TRUE}
+x <- seq(0, 10, length=21)
+d <- data.frame(
+  x1 = x + rnorm(length(x)),
+  x2 = x + rnorm(length(x)),
+  y = x + rnorm(length(x))
+)
+head(d, 4)
+```
+
+The regression task is to predict `y`. Both `x1` and `x2` are correlated with
+`y` and can be used individually to predict `y`. They can also be used
+together. The optimal strategy will depend on the distributions of the data in
+the training dataset as well as the expected properties in future measurements.

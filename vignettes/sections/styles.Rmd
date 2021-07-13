@@ -1,0 +1,58 @@
+<style>
+<!-- Html styles to augment html_vignette -->
+h1 {
+    margin-top: 1em;
+}
+h2 {
+    margin-top: 2em;
+}
+h4 {
+    margin-left: 0;
+}
+img {
+    border: none;
+    margin: 0;
+    margin-bottom: -1em;
+}
+body {
+    font-size: 16px;
+    line-height: 1.65;
+    padding-bottom: 1em;
+}
+pre {
+    line-height: 1.1;
+    margin: 0;
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+}
+div.sourceCode {
+    margin: 0;
+}
+code {
+    color: #060606;
+}
+li code, p code {
+    font-size: 110%;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 1px;
+    padding-right: 1px;
+}
+code span.dv {
+    color: #33805a;
+}
+code span.st {
+    color: #335a80;
+}
+code span.co {
+    color: #478291;
+}
+p {
+    margin: 1.2em 0;
+    color: #222222;
+}
+table td {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+</style>

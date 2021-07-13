@@ -1,0 +1,38 @@
+## Calibration
+
+Calibration is a process that determines how much individual models within an
+ensemble should contribute to the final predictions.
+
+Without calibration, `ml_ensemble` objects average predictions obtained from
+constituent models. This assumes that predictions from all the models are
+equally valid. This may be a reasonable approximation in some cases, but is
+bound not to be true in general.
+
+Calibration of `ml_ensemble` objects requires a representative set of data.
+To mimic a nontrivial calibration scenario in the context of the synthetic
+example, consider a dataset where variable `x1` holds reliable measurements but
+`x2` is noisy,
+
+```{r}
+calib_data <- data.frame(
+  x1 = seq(1, 10) + rnorm(10, 0, 0.2),
+  x2 = seq(1, 10) + rnorm(10, 0, 1.0),
+  y = seq(1, 10) + rnorm(10, 0, 0.2)
+)
+e_lm_calib <- calibrate(e_lm_2, calib_data, label=calib_data$y)
+e_lm_calib
+```
+
+The calibrated ensemble generates predictions without generating warnings,
+
+```{r}
+predict(e_lm_calib, lm_test_data)
+```
+
+In effect, the predictions of the ensemble integrates two constituent models,
+but weights them differently. The quality of the final predictions depends on
+the quality of the individual models, and also on the quality of the
+calibration dataset.
+
+The calibration process can be tuned by assigning weights to data items within
+the calibration dataset. See `help(calibrate)` for details.

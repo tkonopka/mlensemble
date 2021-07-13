@@ -1,0 +1,50 @@
+## Ensembles
+
+Ensembles are collections of `ml_model` objects that are used together to make
+predictions.
+
+An ensemble can consist of a single model. Using the `m_lm_x1` model defined
+in the previous section as an example,
+
+```{r}
+e_lm_1 <- ml_ensemble() + m_lm_x1
+e_lm_1
+```
+
+This construction first creates an empty ensemble using `ml_ensemble()` and
+then adds an existing model into the ensemble. The ensemble can be used with
+`predict` as before,
+
+```{r}
+predict(e_lm_1, lm_test_data)
+```
+
+Because this ensemble consists of a single model, the predictions are
+equivalent to results in the previous section.
+
+However, a key characteristic of ensembles is their support for multiple models.
+In the present context, it is possible to train a new model on the `x2` variable
+of the synthetic dataset and create an ensemble of two models,
+
+```{r}
+m_lm_x2 <- ml_model(lm(y ~ x2, data=d), name="lm_x2")
+e_lm_2 <- m_lm_x1 + m_lm_x2
+e_lm_2
+```
+A similar result can be achieved by extending the existing ensemble with the
+new model,
+
+```{r}
+e_lm_2 <- e_lm_1 + m_lm_x2
+e_lm_2
+```
+
+Predictions using the new ensemble are different,
+
+```{r, warning=TRUE}
+predict(e_lm_2, lm_test_data)
+```
+Importantly, the above command generates a warning. This signals that the
+ensemble is taking unchecked assumptions during the prediction, which can be
+addressed by calibration.
+
