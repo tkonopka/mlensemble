@@ -7,8 +7,8 @@ Ensembles of machine learning models
 ## Synopsis
 
 Package `mlensemble` provides a framework for managing ensembles of
-machine learning models. Importantly, the framework does not train or
-evaluate individual models. It only provides an interface for putting
+machine learning models in R. Importantly, the framework does not train
+or evaluate individual models. It only provides an interface for putting
 existing models together into ensembles.
 
 The framework is agnostic to the implementation details of individual
@@ -17,8 +17,7 @@ e.g. models trained on different training datasets or with different
 feature sets. At the same time, the framework allows for ensemble
 calibration. Calibration tunes how individual models come together to
 form integrated predictions. This offers a means to adjust ensembles to
-properties of new datasets without the need to retrain the underlying
-models.
+new datasets without the need to retrain the underlying models.
 
 ## Installation
 

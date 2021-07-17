@@ -41,7 +41,7 @@ e_models_with_hooks <-
 This construction is reasonable if models require different sets of pre- and post-processing steps. When a step can be applied just once, then a hook can be associated with the ensemble instead.
 
 ```{r}
-e_with_hooks <- ml_ensemble(hooks=list(hook_owercase)) +
+e_with_hooks <- ml_ensemble(hooks=list(hook_lowercase)) +
         ml_model(lm(y ~ x1, data=data_train), name="lm_x1") +
         ml_model(lm(y ~ x2, data=data_train), name="lm_x2")
 e_with_hooks_calib <- calibrate(e_with_hooks, data_calib, label=data_calib$y)
