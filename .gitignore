@@ -9,5 +9,8 @@ vignettes/*cache*
 vignettes/*files*
 *png
 
+# manual/documentation
+man
+
 ## profiling
 *rprof
