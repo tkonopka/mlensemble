@@ -1,23 +1,18 @@
 ## Model and ensemble descriptions
 
-The `summary` method generates plain-language descriptions for `ml_model` and
-`ml_ensemble` objects. A core description for a model consists of one
-paragraph, for example,
+The `summary` method generates plain-language descriptions for `ml_model` and `ml_ensemble` objects. A core description for a model consists of one paragraph, for example,
 
 ```{r}
 summary(m_lm_x1)
 ```
-The description can be tuned via the `description` argument in the
-constructor (see `help(ml_model)` for details). As an example,
+The description can be tuned via the `description` argument in the constructor (see `help(ml_model)` for details). As an example,
 
 ```{r}
 m_custom <- ml_model(lm_x1, name="custom", description="is a linear regression")
 summary(m_custom)
 ```
 
-Descriptions are also available for ensembles. Paragraphs describe the overall
-purpose of the ensemble, the constituent models, calibration status, and any
-pre-processing and post-processing hooks.
+Descriptions are also available for ensembles. Paragraphs describe the overall purpose of the ensemble, the constituent models, calibration status, and any pre-processing and post-processing hooks.
 
 ```{r}
 summary(e_with_hooks_calib)

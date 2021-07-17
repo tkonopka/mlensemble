@@ -1,32 +1,26 @@
 ## Models
 
-The package manages machine learning models using objects of class `ml_model`.
-These objects are constructed using the `ml_model` constructor. As a minimal
-example, consider a linear regression trained on the synthetic dataset.
+The package manages machine learning models using objects of class `ml_model`. These objects are constructed using the `ml_model` constructor. As a minimal example, consider a linear regression trained on the synthetic dataset.
 
 ```{r, eval=TRUE, echo=TRUE}
-lm_x1 <- lm(y ~ x1, data=d)
+lm_x1 <- lm(y ~ x1, data=data_train)
 m_lm_x1 <- ml_model(lm_x1)
 ```
 
-The first object, `lm_x1`, is a standard R model. The second line defined an
-`ml_model` object that contains the R model. They behave similarly in terms
-of making predictions. For example,
+The first object, `lm_x1`, is a standard R model. The second line defined an `ml_model` object that contains the R model. They behave similarly in terms of making predictions. For example,
 
 ```{r, eval=TRUE, echo=TRUE}
-lm_test_data <- data.frame(x1 = c(1, 2, 3, 4),
-                           x2 = c(1, 2, 3, 4))
-predict(lm_x1, lm_test_data)
-predict(m_lm_x1, lm_test_data)
+data_test <- data.frame(x1 = c(1, 2, 3, 4),
+                     x2 = c(1, 2, 3, 4))
+predict(lm_x1, data_test)
+predict(m_lm_x1, data_test)
 ```
 A very brief description of the `ml_model` object is available via `print`.
 
 ```{r}
 m_lm_x1                   ## equivalent to print(m_lm_x1)
 ```
-The above displays the 'name' of the model, which in this case is 'lm_x1'
-because it was inferred from the constructor. It is possible to set the name
-to another string within the constructor, for example,
+The above displays the 'name' of the model, which in this case is 'lm_x1' because it was inferred from the constructor. It is possible to set the name to another string within the constructor, for example,
 
 ```{r}
 ml_model(lm_x1, name="my_model")

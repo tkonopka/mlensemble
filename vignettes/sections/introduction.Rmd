@@ -1,35 +1,11 @@
 ## Introduction
 
-Machine learning models turn raw data into predictions. Ensembles use
-contributions from multiple models to form a joint prediction.
+Machine learning models turn raw data into predictions. Ensembles use contributions from multiple models to form a joint prediction.
 
-The idea that pooling models together can enhance predictions is a core
-concept in machine learning. Indeed, some training algorithms like random
-forests work by internally building many small models and strategically
-combining their outputs. Ensembles are also used at smaller scales sometimes,
-for example, when analysts run several tools on the same data and combine
-outputs using a consensus, majority vote, or simple average.
+The idea that pooling models together can enhance predictions is a core concept in machine learning. Indeed, some training algorithms like random forests work by internally building many small models and strategically combining their outputs. Ensembles are also used at smaller scales sometimes, for example, when analysts run several tools on the same data and combine outputs using a consensus, majority vote, or simple average.
 
-In the R environment, the [caret](https://cran.r-project.org/web/packages/caret/index.html) and
-[mlr3](https://cran.r-project.org/web/packages/mlr3/index.html) frameworks
-offer tools to train and optimize many types of machine learning
-models. The [caretEnsemble](https://cran.r-project.org/web/packages/caretEnsemble/index.html)
-package offers an interface to combine models into ensembles. These
-frameworks create models from scratch and make heavy use of training data in
-the optimization stages. However, this well-principled approach is not feasible
-in some situations. In particular, there may be scenarios where pre-trained
-models already exists, but the original training data are no longer available.
+In the R environment, the [caret](https://cran.r-project.org/web/packages/caret/index.html) and [mlr3](https://cran.r-project.org/web/packages/mlr3/index.html) frameworks offer tools to train and optimize many types of machine learning models. The [caretEnsemble](https://cran.r-project.org/web/packages/caretEnsemble/index.html) package offers an interface to combine models into ensembles. These frameworks create models from scratch and make heavy use of training data in the optimization stages. However, this well-principled approach is not feasible in some situations. In particular, there may be scenarios where pre-trained models already exists, but the original training data are no longer available.
 
-The `mlensemble` package is a lightweight approach for creating model ensembles
-from already-trained models. It supports regression and multi-class
-classification, but it does not make any assumptions about the internal workings
-of individual models. It can thus accommodate simple and complex models,
-including models that link outside of the R environment. The package supports
-attaching arbitrary pre-processing and post-processing steps to each model.
-It also offers a mechanism to calibrate ensembles, thereby offering a level of
-tuning that goes beyond simple averaging strategies.
+The `mlensemble` package is a lightweight approach for creating model ensembles from already-trained models. It supports regression and multi-class classification, but it does not make any assumptions about the internal workings of individual models. It can thus accommodate simple and complex models, including models that link outside of the R environment. The package supports attaching arbitrary pre-processing and post-processing steps to each model. It also offers a mechanism to calibrate ensembles, thereby offering a level of tuning that goes beyond simple averaging strategies.
 
-This vignette showcases the core features of the `mlensemble` package. The next
-section introduces an example dataset used in all examples. Subsequent sections
-show how to construct models and ensembles, how to fine-tune ensembles through
-calibration and hook functions, and how to obtain plain-language descriptions.
+This vignette showcases the core features of the `mlensemble` package. The next section introduces an example dataset used in all examples. Subsequent sections show how to construct models and ensembles, how to fine-tune ensembles through calibration and hook functions, and how to obtain plain-language descriptions.

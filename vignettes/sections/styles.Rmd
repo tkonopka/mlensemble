@@ -32,7 +32,7 @@ code {
     color: #060606;
 }
 li code, p code {
-    font-size: 110%;
+    font-size: 115%;
     margin-left: 0px;
     margin-right: 0px;
     padding-left: 1px;
