@@ -5,7 +5,7 @@ Authors@R:
     person("Tomasz", "Konopka", , "tokonopka@gmail.com", role = c("aut", "cre"))
 Author: Tomasz Konopka [aut, cre]
 Maintainer: Tomasz Konopka <tokonopka@gmail.com>
-Description: Ensembles of heterogeneous machine learning models can be used to adjust or correct predictions from an existing model.
+Description: Ensembles of heterogeneous machine learning models can provide more robust predictions than individual models. The package provides a framework to create ensembles via composition of already-trained models, to attach custom pre-processing and post-processing functions to each model and to ensembles, and to calibrate ensembles. The framework supports regression and multi-class classification.
 Depends:
     R (>= 3.6.0)
 Imports:
