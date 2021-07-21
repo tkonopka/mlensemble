@@ -48,6 +48,12 @@ tasks, see other machine learning frameworks in R, for example
 [caret](https://cran.r-project.org/web/packages/caret/) or
 [mlr3](https://cran.r-project.org/web/packages/mlr3/index.html).
 
+Another package with similar aims and features is
+[caretEnsemble](https://cran.r-project.org/web/packages/caretEnsemble/index.html).
+The main distinction is that `caretEnsemble` combines models that have
+been trained on the same training data, whereas `mlensemble` does not
+have this requirement.
+
 ## Installation
 
 The package can be installed through github.
