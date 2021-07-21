@@ -1,7 +1,7 @@
 # convenience function: summary
 
 
-#' clean a string in various ways (double spaces, double dots, ...)
+#' clean a string (remove double spaces, double dots, ...)
 #'
 #' @keywords internal
 #' @noRd

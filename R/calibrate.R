@@ -1,7 +1,7 @@
 # adjusting an ensemble of models using calibration data
 
 
-#' redefine weights assigned to models in an ensemble
+#' calibrate an ensemble using an independent calibration dataset
 #'
 #' @export
 #' @param ensemble object of class 'ml_ensemble'
@@ -9,7 +9,8 @@
 #' appropriate for the model ensemble
 #' @param label vector with expected predictions, e.g. numeric values for
 #' regression, or integer/character values for classification
-#' @param weight numeric vector with weights for data items
+#' @param weight numeric vector with weights for data items; if omitted,
+#' all data items take equal weight
 #'
 #' @return object of class ml_ensemble
 #'

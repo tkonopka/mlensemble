@@ -18,6 +18,24 @@ Package `mlensemble` provides a framework for managing ensembles of machine lear
 The framework is agnostic to the implementation details of individual models. This approach allows ensembles to have heterogeneous components, e.g. models trained on different training datasets or with different feature sets. At the same time, the framework allows for ensemble calibration. Calibration tunes how individual models come together to form integrated predictions. This offers a means to adjust ensembles to new datasets without the need to retrain the underlying models.
 
 
+## Features
+
+The package provides the following features:
+
+  - creation of ensembles via composition of models using the `+` operator
+  - support for regression and multi-class classification; classification models must provide output in the form of probabilities for each class
+  - support for custom predictors implemented as an R function
+  - support for heterogeneous models, including models using different sets of input features and models trained on different datasets
+  - tested with models created by `lm`, `glm`, and `xgboost` (library [xgboost](https://cran.r-project.org/web/packages/xgboost/index.html))
+  - should, in principle, be compatible with any R model that supports the `predict` method
+  - harmonization of class labels in the context of multi-class classification (e.g. when integrating models using different sets of labels)
+  - attaching custom pre-processing and post-processing functions
+  - calibration of ensembles using calibration datasets
+  - plain-language descriptions of individual models and model ensembles
+
+It is important to note that the package does not train new models. It also does not compare the performance of competing models. For these tasks, see other machine learning frameworks in R, for example [caret](https://cran.r-project.org/web/packages/caret/) or [mlr3](https://cran.r-project.org/web/packages/mlr3/index.html).
+
+
 ## Installation
 
 The package can be installed through github. 
@@ -85,24 +103,6 @@ summary(ensemble_calibrated)
 ```
 
 As the summary suggests, the package supports attaching custom functions to pre-process input data or post-process outputs. See the package vignette for details.
-
-
-## Features
-
-The package provides the following features and capabilities:
-
-  - creation of ensembles via composition of heterogeneous models using the `+` operator
-  - support for regression and multi-class classification; classification models must provide output in the form of probabilities for each class
-  - support for custom predictors implemented as an R function
-  - support for heterogeneous models, including models using different sets of input features
-  - tested with models created by `lm`, `glm`, and `xgboost` (library [xgboost](https://cran.r-project.org/web/packages/xgboost/index.html))
-  - should, in principle, be compatible with any R model that supports the `predict` method
-  - harmonization of class labels in the context of multi-class classification (e.g. when integrating models using different sets of labels)
-  - attaching custom pre-processing and post-processing functions
-  - calibration of ensembles using calibration datasets
-  - plain-language descriptions of individual models and model ensembles
-
-It is important to note that the package does not train new models. It also does not compare the performance of competing models on training or test datasets. For these tasks, see other machine-learning frameworks in R, for example [caret](https://cran.r-project.org/web/packages/caret/) or [mlr3](https://cran.r-project.org/web/packages/mlr3/index.html).
 
 
 ## Contributing

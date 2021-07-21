@@ -1,7 +1,7 @@
 # creating model ensembles by constructors and composition
 
 
-#' define an object as an ml_model type
+#' create an object containing an already-trained ML model
 #'
 #' @export
 #' @param model object with a machine learning model (e.g. lm, glm, xgboost)
@@ -19,13 +19,13 @@
 #'
 #' @examples
 #'
-#' lm_1 = lm(y~x, data=data.frame(x=1:2, y=1:2))
+#' lm_1 = lm(y ~ x1, data=data.frame(x1=1:2, y=1:2))
 #'
 #' # default constructor
 #' ml_model(lm_1)
 #'
-#' # use a custom name
-#' ml_model(lm_1, name="linear_model_1")
+#' # constructor setting a custom name
+#' ml_model(lm_1, name="linear_model_x1")
 #'
 ml_model <- function(model, name=NULL,
                      feature_names=NULL, label_names=NULL,
@@ -53,6 +53,8 @@ ml_model <- function(model, name=NULL,
 
 #' trim a model name into alphanumeric, underscore, and dot
 #'
+#' @keywords internal
+#' @noRd
 #' @param x character
 #'
 #' @return character, model name, suitable as a data frame column

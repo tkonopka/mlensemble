@@ -1,29 +1,6 @@
 # functions to reduce a list of predictions into a single result
 
 
-#' use an ml_model to predict output for a new dataset
-#'
-#' @keywords internal
-#' @noRd
-#' @param object object of class ml_model
-#' @param data object with data to operate on, e.g. matrix or data frame
-#'
-#' @return prediction of the model "object" on a dataset "data"
-reduce_mean <- function(x, weight=NULL) {
-  if (is.null(weight)) {
-    weight <- setNames(rep(1, length(x)), names(x))
-  }
-  stopifnot(identical(names(x), names(weight)))
-  result <- x[[1]] * weight[1]
-  if (length(x)>1) {
-    for (i in seq(2, length(x))) {
-      result <- result + (x[[i]]*weight[[i]])
-    }
-  }
-  result / sum(weight)
-}
-
-
 #' reduce a set of vector predictions using a calibration
 #'
 #' @keywords internal

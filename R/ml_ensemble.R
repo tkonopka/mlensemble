@@ -18,8 +18,8 @@
 #' ensemble = ml_ensemble()
 #'
 #' # ensemble with several models
-#' lm_1 = lm(y~x, data=data.frame(x=1:2, y=-0.2 + 1:2))
-#' lm_2 = lm(y~x, data=data.frame(x=1:2, y=+0.2 + 1:2))
+#' lm_1 = lm(y ~ x1, data=data.frame(x1=1:2, y=-0.2 + 1:2))
+#' lm_2 = lm(y ~ x2, data=data.frame(x2=1:2, y=+0.2 + 1:2))
 #' ensemble = ml_model(lm_1) + ml_model(lm_2)
 #'
 ml_ensemble <- function(name=NULL, hooks=list(), description=NA) {
@@ -71,8 +71,8 @@ add_ml_model <- function(ensemble, model) {
 #'
 #' @return a model ensemble
 #'
-#' lm_1 = lm(y~x, data=data.frame(x=1:2, y=-0.2 + 1:2))
-#' lm_2 = lm(Y~x, data=data.frame(x=1:2, y=+0.2 + 1:2))
+#' lm_1 = lm(y ~ x1, data=data.frame(x1=1:2, y=-0.2 + 1:2))
+#' lm_2 = lm(y ~ x2, data=data.frame(x2=1:2, y=+0.2 + 1:2))
 #' ensemble = ml_model(lm_1) + ml_model(lm_2)
 #'
 "+.ml_model" <- function(m1, m2) {

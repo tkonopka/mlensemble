@@ -3,6 +3,8 @@
 
 #' prepare a data object so that it includes all required features
 #'
+#' @keywords internal
+#' @noRd
 #' @param data object with data to operate on, e.g. matrix or data.frame
 #' @param feature_names character, vector with feature names
 #'
@@ -55,8 +57,10 @@ predict.ml_model <- function(object, data, type="response", ...) {
 }
 
 
-#' use an ensemble of models to predict on new data
+#' use an ensemble of models to make predictions for new data
 #'
+#' @keywords internal
+#' @noRd
 #' @param ensemble object of class ml_ensemble
 #' @param data object with data
 #' @param ... other arguments passed to predict
@@ -70,7 +74,7 @@ raw_predict_ensemble <- function(ensemble, data, ...) {
 }
 
 
-#' use an ensemble of models (ml_ensembl) to predict output for a new dataset
+#' use an ensemble of models to make predictions for new data
 #'
 #' @export
 #' @param object object of class ml_ensemble
