@@ -60,7 +60,7 @@ The package can be installed through github.
 
 ``` r
 library(devtools)
-install_github("tkonopka/mlenesemble")
+install_github("tkonopka/mlensemble")
 ```
 
 ## Minimal example
